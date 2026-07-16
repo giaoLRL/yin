@@ -114,11 +114,11 @@ void stabilizer_update(Stabilizer *stab)
     float pitch, roll, yaw;
     mpu6050_get_angles(&pitch, &roll, &yaw);
 
-    /* 2. PID 计算 (pitch→俯仰电机B, yaw→偏航电机A) */
+    /* 2. PID 计算 (取反: 云台机械方向约定, 负反馈) */
     float dt = MPU6050_DT;
 
-    float yaw_correction   = pid_compute(&stab->yaw_pid,   yaw,   dt);
-    float pitch_correction = pid_compute(&stab->pitch_pid, pitch, dt);
+    float yaw_correction   = -pid_compute(&stab->yaw_pid,   yaw,   dt);
+    float pitch_correction = -pid_compute(&stab->pitch_pid, pitch, dt);
 
     /* 3. 电机 A (偏航) */
     {
